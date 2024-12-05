@@ -1,7 +1,7 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
+
+
 import { users } from '../../../data/postgres';
-
-
 
 const app = new Hono();
 
