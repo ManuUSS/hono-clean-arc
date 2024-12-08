@@ -5,6 +5,7 @@
     "jsxImportSource": "hono/jsx",
     "paths": {
       "@domain/*": ["./src/domain/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"],
       "@data/*": ["./src/data/*"],
       "@config/*": ["./src/config/*"],
     }

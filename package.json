@@ -4,11 +4,13 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "hono": "^4.6.12",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
     "@types/jsonwebtoken": "^9.0.7"
   }
