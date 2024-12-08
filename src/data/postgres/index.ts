@@ -33,3 +33,47 @@ export let users = [
   }
 ]
 
+
+export let products = [
+  {
+    id: "b7a9de7c-7095-4f38-9f35-f64b2128cbe3",
+    store_id: "a07c8ddf-cb39-4c8e-8454-9b882c9db88e",
+    name: "Product A",
+    description: "Product A Description",
+    price: 10.99,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["red", "blue", "green"],
+    category: "clothes",
+  },
+  {
+    id: "ff48bc4a-e37e-48c8-859d-61d63561a3fa",
+    store_id: "a07c8ddf-cb39-4c8e-8454-9b882c9db88e",
+    name: "Product B",
+    description: "Product B Description",
+    price: 15.99,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["yellow", "#ff00ff", "#00ff00"],
+    category: "clothes",
+  },
+  {
+    id: "d3f4vbc4a-f37e-46c8-459d-61d63561a3fa",
+    store_id: "a07c8ddf-cb39-4c8e-8454-9b882c9db88e",
+    name: "Product C",
+    description: "Product C Description",
+    price: 20.99,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#e056bc", "#d8f988", "#f9f9f9"],
+    category: "clothes",
+  },
+  {
+    id: "d3f4vbc4a-f37e-46c8-459d-61d63561a3fa",
+    store_id: "a07c8ddf-cb39-4c8e-8454-9b882c9db88e",
+    name: "Product D",
+    description: "Product D Description",
+    price: 25.99,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#000000", "#da984c", "#f9f9f9"],
+    category: "clothes",
+  }
+];
+

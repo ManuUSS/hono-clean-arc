@@ -1,17 +1,13 @@
 import { Hono } from 'hono';
-import { jwt } from 'hono/jwt';
-import type { JwtVariables } from 'hono/jwt';
 
-import UserHandler from './presentation/users/controllers/users.controller';
+import UserHandler from './presentation/users/handler/users.handler';
+import ProductHandler from './presentation/products/handler/products.handler';
 
+const api = new Hono().basePath('/api');
 
+api.route('/', UserHandler );
+api.route('/', ProductHandler );
 
-
-type Variables = JwtVariables;
-const app = new Hono<{ Variables: Variables }>();
-
-app.use('/users/*', jwt({ secret: process.env.TOKEN_SECRET! }));
-app.route('/users', UserHandler );
 // app.route('/orders', );
 
-export default app
+export default api;
