@@ -8,7 +8,7 @@ export class UserRepositoryImpl implements UserRepository {
     private readonly dataSource:UserDataSource
   ) {}
 
-  create(user: CreateUserDto): Promise<any> {
+  create(user:CreateUserDto): Promise<any> {
     return this.dataSource.create( user );
   }
 
