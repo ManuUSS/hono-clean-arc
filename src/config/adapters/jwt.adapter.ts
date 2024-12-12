@@ -9,6 +9,7 @@ export class JWTAdapter {
     return new Promise( ( resolve ) => {
 
       sign( payload, JWT_SEED!, { expiresIn: duration }, ( error, token ) => {
+        console.log( error );
         if( error ) return resolve( null );
         resolve( token );
       });

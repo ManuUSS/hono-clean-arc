@@ -10,9 +10,6 @@ import { UserDataSourceImpl } from '@infrastructure/users/datasources';
 
 
 const app = new Hono().basePath('/user');
-// This paths and methods require a valid JWT token
-const PATHS = ['/', '/:id'];
-const METHODS = [ 'GET', 'PATCH', 'DELETE', 'POST' ];
 
 const userRepository = new UserRepositoryImpl( new UserDataSourceImpl() );
 
@@ -20,7 +17,7 @@ const userRepository = new UserRepositoryImpl( new UserDataSourceImpl() );
  * Middleware to validate JWT token
  * @see {@link JWTAdapter.verifyToken}
  */
-app.on( METHODS, PATHS, async ( c, next ) => {
+app.use('*', async ( c, next ) => {
 
   const bearerToken = c.req.header('Authorization')?.replace('Bearer ', '');
   if( !bearerToken ) return c.json({ message: 'Token not provided' }, 401);
