@@ -1,4 +1,4 @@
-import { users } from '@data/postgres';
+import { prisma, users } from '@data/postgres';
 import { BcryptAdapter } from '@config/adapters';
 
 import type { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
@@ -17,10 +17,14 @@ export class AuthDataSourceImpl implements AuthDataSource {
 
     await Promise.resolve( null );
 
-    const savedUser = users.find(user => user.email === dto.email );
+    const savedUser = await prisma.user.findUnique({ where: { email: dto.email } });
 
     if( !savedUser ) {
       return { ok: false, message: 'User not found' };
+    }
+
+    if( !savedUser.password ) {
+      return { ok:true, message: 'User logged in' };
     }
 
     const isPasswordValid = BcryptAdapter.compare(dto.password, savedUser.password);

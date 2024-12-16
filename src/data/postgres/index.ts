@@ -1,4 +1,6 @@
+import { PrismaClient } from "@prisma/client";
 
+export const prisma = new PrismaClient();
 
 export let users = [
   {
@@ -32,7 +34,6 @@ export let users = [
     password: "$2a$10$F3Cn6xInux8avXRAe21C3uybEqNMOorEVWWmMHhMT6tERPA1S7e36"
   }
 ]
-
 
 export let products = [
   {

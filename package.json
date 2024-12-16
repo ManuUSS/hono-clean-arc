@@ -3,7 +3,11 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "dependencies": {
+    "@prisma/client": "^6.0.1",
     "bcryptjs": "^2.4.3",
     "hono": "^4.6.12",
     "jsonwebtoken": "^9.0.2",
@@ -12,6 +16,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
-    "@types/jsonwebtoken": "^9.0.7"
+    "@types/jsonwebtoken": "^9.0.7",
+    "prisma": "6.0.1"
   }
 }
