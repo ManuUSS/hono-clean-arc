@@ -4,11 +4,11 @@ import { validator } from 'hono/validator';
 import { JWTAdapter } from '@config/adapters';
 import { LoginUser } from '@domain/auth/use-cases/login-user';
 import { RegisterUser } from '@domain/auth/use-cases/register-user';
+import { LoginSchema } from '@domain/auth/schemas/login.schema';
 import { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
 import { RegisterUserDto } from '@domain/auth/dtos/register-user.dto';
 import { AuthRepositoryImpl } from '@infrastructure/auth/repositories/auth.repository.impl';
 import { AuthDataSourceImpl } from '@infrastructure/auth/datasources/auth.datasource.impl';
-import { LoginSchema } from '@domain/auth/schemas/login.schema';
 
 const app = new Hono().basePath('/auth');
 
