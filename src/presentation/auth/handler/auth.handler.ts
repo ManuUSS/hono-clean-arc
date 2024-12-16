@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { validator } from 'hono/validator';
 
 import { JWTAdapter } from '@config/adapters';
 import { LoginUser } from '@domain/auth/use-cases/login-user';
@@ -7,6 +8,7 @@ import { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
 import { RegisterUserDto } from '@domain/auth/dtos/register-user.dto';
 import { AuthRepositoryImpl } from '@infrastructure/auth/repositories/auth.repository.impl';
 import { AuthDataSourceImpl } from '@infrastructure/auth/datasources/auth.datasource.impl';
+import { LoginSchema } from '@domain/auth/schemas/login.schema';
 
 const app = new Hono().basePath('/auth');
 
@@ -15,12 +17,29 @@ const loginUseCase = new LoginUser( authRepository );
 const registerUseCase = new RegisterUser( authRepository );
 
 app
-  .post('/login', async ( c ) => {
+  .post('/login', 
+  validator('form', ( value, c ) => {
+    console.log( value );
+    const parsed = LoginSchema.safeParse( value );
+    
+    if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+
+    return parsed.data;
+
+  }),
+  validator('json', ( value, c ) => {
+
+    const parsed = LoginSchema.safeParse( value );
+    
+    if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+
+    return parsed.data;
+
+  }),
+  async ( c ) => {
     const payload = await c.req.json();
 
-    const [ error, loginUserDto ] = LoginUserDto.create( payload );
-
-    if( error ) return c.json({ error }, 400);
+    const loginUserDto = LoginUserDto.create( payload );
 
     const { ok, message } =  await loginUseCase.execute( loginUserDto! );
 

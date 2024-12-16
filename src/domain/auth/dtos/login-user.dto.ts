@@ -7,14 +7,10 @@ export class LoginUserDto {
   ){};
 
 
-  static create( obj:Record<string, any> ): [ string?, LoginUserDto? ] {
+  static create( obj:Record<string, any> ): LoginUserDto {
   
     const { email, password } = obj;
-
-    if( !email ) return [ 'Invalid email' ];
-    if( !password ) return [ 'Invalid password' ];
-
-    return [ undefined, new LoginUserDto( email, password ) ];
+    return new LoginUserDto( email, password );
 
   }
 
