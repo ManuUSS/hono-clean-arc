@@ -12,4 +12,7 @@ api.route('/', AuthHandler );
 
 // app.route('/orders', );
 
-export default api;
+export default {
+  port: Bun.env.PORT,
+  fetch: api.fetch
+};
