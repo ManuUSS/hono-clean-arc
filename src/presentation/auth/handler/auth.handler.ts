@@ -9,6 +9,7 @@ import { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
 import { RegisterUserDto } from '@domain/auth/dtos/register-user.dto';
 import { AuthRepositoryImpl } from '@infrastructure/auth/repositories/auth.repository.impl';
 import { AuthDataSourceImpl } from '@infrastructure/auth/datasources/auth.datasource.impl';
+import { RegisterSchema } from '@domain/auth/schemas/register.schema';
 
 const app = new Hono().basePath('/auth');
 
@@ -19,7 +20,7 @@ const registerUseCase = new RegisterUser( authRepository );
 app
   .post('/login', 
   validator('form', ( value, c ) => {
-    console.log( value );
+    
     const parsed = LoginSchema.safeParse( value );
     
     if( !parsed.success ) return c.json({ error: parsed.error }, 400);
@@ -28,7 +29,6 @@ app
 
   }),
   validator('json', ( value, c ) => {
-
     const parsed = LoginSchema.safeParse( value );
     
     if( !parsed.success ) return c.json({ error: parsed.error }, 400);
@@ -57,12 +57,32 @@ app
   });
 
 app
-  .post('/register', async ( c ) => {
+  .post('/register', 
+    validator('form', ( value, c ) => {
+      
+      const parsed = RegisterSchema.safeParse( value );
+
+      if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+
+      return parsed.data;
+
+    }),
+    validator('json', ( value, c ) => {
+      console.log('first');
+      const parsed = RegisterSchema.safeParse( value );
+
+      if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+
+      return parsed.data;
+    }),
+    async ( c ) => {
     const payload = await c.req.json();
 
-    const [ error, registerUserDto ] = RegisterUserDto.create( payload );
+    const registerUserDto = RegisterUserDto.create( payload );
 
-    if( error ) return c.json({ error }, 400);
+    const { ok, message } = await registerUseCase.execute( registerUserDto! );
+
+    if( !ok ) return c.json({ message }, 400);
 
     return c.json({ payload, message: 'User registered' }, 201);
   });

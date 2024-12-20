@@ -1,4 +1,5 @@
-import { prisma, users } from '@data/postgres';
+import { prisma } from '@data/postgres';
+import { User } from '@prisma/client';
 import { BcryptAdapter } from '@config/adapters';
 
 import type { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
@@ -14,8 +15,6 @@ type LoginResponse = {
 export class AuthDataSourceImpl implements AuthDataSource {
 
   async login( dto:LoginUserDto ):Promise<LoginResponse> {
-
-    await Promise.resolve( null );
 
     const savedUser = await prisma.user.findUnique({ where: { email: dto.email } });
 
@@ -36,8 +35,20 @@ export class AuthDataSourceImpl implements AuthDataSource {
 
   }
   
-  register( dto:RegisterUserDto ):Promise<any> {
-    throw new Error('Method not implemented');
+  async register( dto:RegisterUserDto ):Promise<User> {
+
+    const newUser = await prisma.user.create({
+      data: {
+        email: dto.email,
+        password: BcryptAdapter.hash( dto.password ),
+        name: dto.name,
+        lastName: dto.lastName
+      },
+    });
+
+    // TODO: Crea entity
+    return newUser;
+
   }
 
 };
