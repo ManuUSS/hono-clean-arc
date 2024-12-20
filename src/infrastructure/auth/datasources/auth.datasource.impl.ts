@@ -1,10 +1,10 @@
 import { prisma } from '@data/postgres';
-import { User } from '@prisma/client';
 import { BcryptAdapter } from '@config/adapters';
 
 import type { LoginUserDto } from '@domain/auth/dtos/login-user.dto';
 import type { RegisterUserDto } from '@domain/auth/dtos/register-user.dto';
 import type { AuthDataSource } from '@domain/auth/datasources/auth.datasource';
+import { RegisterEntity } from '@domain/auth/entities/register.entity';
 
 
 type LoginResponse = {
@@ -35,19 +35,22 @@ export class AuthDataSourceImpl implements AuthDataSource {
 
   }
   
-  async register( dto:RegisterUserDto ):Promise<User> {
+  async register( dto:RegisterUserDto ):Promise<RegisterEntity | null> {
 
-    const newUser = await prisma.user.create({
-      data: {
-        email: dto.email,
-        password: BcryptAdapter.hash( dto.password ),
-        name: dto.name,
-        lastName: dto.lastName
-      },
-    });
-
-    // TODO: Crea entity
-    return newUser;
+    try {
+      const newUser = await prisma.user.create({
+        data: {
+          email: dto.email,
+          password: BcryptAdapter.hash( dto.password ),
+          name: dto.name,
+          lastName: dto.lastName
+        },
+      });
+  
+      return RegisterEntity.create( newUser );
+    } catch ( error ) {
+      return null;
+    }
 
   }
 

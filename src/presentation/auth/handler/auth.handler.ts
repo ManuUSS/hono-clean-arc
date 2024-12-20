@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
+import { zValidator } from '@hono/zod-validator'
 
 import { JWTAdapter } from '@config/adapters';
 import { LoginUser } from '@domain/auth/use-cases/login-user';
@@ -18,73 +19,45 @@ const loginUseCase = new LoginUser( authRepository );
 const registerUseCase = new RegisterUser( authRepository );
 
 app
-  .post('/login', 
-  validator('form', ( value, c ) => {
-    
-    const parsed = LoginSchema.safeParse( value );
-    
-    if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+  .post('/login',
+    zValidator('form', LoginSchema, ( result, c ) => {
+      if( !result.success ) return c.json({ message: result.error }, 400);
+    }),
+    async ( c ) => {
+      const payload = await c.req.json();
 
-    return parsed.data;
+      const loginUserDto = LoginUserDto.create( payload );
 
-  }),
-  validator('json', ( value, c ) => {
-    const parsed = LoginSchema.safeParse( value );
-    
-    if( !parsed.success ) return c.json({ error: parsed.error }, 400);
+      const { ok, message } =  await loginUseCase.execute( loginUserDto! );
 
-    return parsed.data;
+      if( !ok ) return c.json({ message }, 401);
+      
+      const accessTokenPromise = JWTAdapter.generateToken( { email: loginUserDto!.email }, '1h');
+      const refreshTokenPromise = JWTAdapter.generateToken( { email: loginUserDto!.email }, '7d');
+      
+      const [
+        accessToken,
+        refreshToken
+      ] = await Promise.all([ accessTokenPromise, refreshTokenPromise ]);
 
-  }),
-  async ( c ) => {
-    const payload = await c.req.json();
-
-    const loginUserDto = LoginUserDto.create( payload );
-
-    const { ok, message } =  await loginUseCase.execute( loginUserDto! );
-
-    if( !ok ) return c.json({ message }, 401);
-    
-    const accessTokenPromise = JWTAdapter.generateToken( { email: loginUserDto!.email }, '1h');
-    const refreshTokenPromise = JWTAdapter.generateToken( { email: loginUserDto!.email }, '7d');
-    
-    const [
-      accessToken,
-      refreshToken
-    ] = await Promise.all([ accessTokenPromise, refreshTokenPromise ]);
-
-    return c.json({ access_token: accessToken, refresh_token: refreshToken }, 201);
+      return c.json({ access_token: accessToken, refresh_token: refreshToken }, 201);
   });
 
 app
   .post('/register', 
-    validator('form', ( value, c ) => {
-      
-      const parsed = RegisterSchema.safeParse( value );
-
-      if( !parsed.success ) return c.json({ error: parsed.error }, 400);
-
-      return parsed.data;
-
-    }),
-    validator('json', ( value, c ) => {
-      console.log('first');
-      const parsed = RegisterSchema.safeParse( value );
-
-      if( !parsed.success ) return c.json({ error: parsed.error }, 400);
-
-      return parsed.data;
+    zValidator('json', RegisterSchema, ( result, c ) => {
+      if( !result.success ) return c.json({ message: result.error }, 400);
     }),
     async ( c ) => {
-    const payload = await c.req.json();
+      const payload = await c.req.json();
 
-    const registerUserDto = RegisterUserDto.create( payload );
+      const registerUserDto = RegisterUserDto.create( payload );
 
-    const { ok, message } = await registerUseCase.execute( registerUserDto! );
+      const user = await registerUseCase.execute( registerUserDto! );
 
-    if( !ok ) return c.json({ message }, 400);
+      if( !user ) return c.json({ message:'Internal server error' }, 500);
 
-    return c.json({ payload, message: 'User registered' }, 201);
+      return c.json({ user, message: 'User registered' }, 201);
   });
 
 app

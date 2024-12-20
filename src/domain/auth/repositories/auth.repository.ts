@@ -1,5 +1,7 @@
+
 import type { LoginUserDto } from '../dtos/login-user.dto';
 import type { RegisterUserDto } from '../dtos/register-user.dto';
+import type { RegisterEntity } from '../entities/register.entity';
 
 type LoginResponse = {
   ok: boolean;
@@ -8,7 +10,7 @@ type LoginResponse = {
 
 export abstract class AuthRepository {
   abstract login( dto:LoginUserDto ): Promise<LoginResponse>;
-  abstract register( dto:RegisterUserDto ): Promise<any>;
+  abstract register( dto:RegisterUserDto ): Promise<RegisterEntity | null>;
 }
 
 

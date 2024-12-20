@@ -5,7 +5,7 @@ export const RegisterSchema = z.object({
   password:        z.string().min( 6 ),
   confirmPassword: z.string().min( 6 ),
   name:            z.string(),
-  lastName:        z.string()
+  lastName:        z.string().optional()
 }).superRefine(({ password, confirmPassword }, ctx) => {
 
   if( password !== confirmPassword ) {
