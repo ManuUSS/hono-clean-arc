@@ -37,23 +37,23 @@ This project showcases a **basic yet robust example** of implementing Clean Arch
 ---
 
 ## 📂 Project Structure
-📁 src 
-├── 📁 domain # Core business logic 
-│ ├── 📁 datasources # Core entities (models) - Databases Handlers 
-│ ├── 📁 entities # Data Transfer Objects
-│ ├── 📁 entities # Objects used through the project (No direct object from DB)
-│ ├── 📁 repositories # Abstract classes for repositories
-│ ├── 📁 schemas # Validation schemas using zod 
-│ └── 📁 use-cases # Application-specific business rules 
-├── 📁 infrastructure # Frameworks and data access 
-│ ├── 📁 datasources # External data sources (APIs, DBs) 
-│ └── 📁 repositories # Implementation of repositories 
-├── 📁 presentation # Web layer 
-│ └── 📁 handlers # Handle HTTP requests and routes defined here
-├── 📁 prisma # Prisma schemas and migrations
-│ ├── 📁 migrations # Database migrations
-│ └── 📄 schema.prisma # Database schema 
-└── 📄 index.ts # Application entry point
+📁 src \
+├── 📁 domain # Core business logic \
+│ ├── 📁 datasources # Core entities (models) - Databases Handlers \
+│ ├── 📁 entities # Data Transfer Objects \
+│ ├── 📁 entities # Objects used through the project (No direct object from DB)    
+│ ├── 📁 repositories # Abstract classes for repositories \
+│ ├── 📁 schemas # Validation schemas using zod   
+│ └── 📁 use-cases # Application-specific business rules   
+├── 📁 infrastructure # Frameworks and data access   
+│ ├── 📁 datasources # External data sources (APIs, DBs)   
+│ └── 📁 repositories # Implementation of repositories   
+├── 📁 presentation # Web layer   
+│ └── 📁 handlers # Handle HTTP requests and routes defined here  
+├── 📁 prisma # Prisma schemas and migrations  
+│ ├── 📁 migrations # Database migrations  
+│ └── 📄 schema.prisma # Database schema   
+└── 📄 index.ts # Application entry point  
 
 ---
 
